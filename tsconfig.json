@@ -11,9 +11,6 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
-    "paths": {
-      "swiper/*": ["./node_modules/swiper/*"]
-    },
     "lib": ["esnext", "dom", "dom.iterable"],
     "sourceMap": true,
     "noImplicitAny": false
