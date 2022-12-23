@@ -1,0 +1,21 @@
+.app_container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(128, 128, 128, 0.5);
+  font-size: 24px;
+  span {
+    color: red;
+  }
+}
+input {
+  width: auto;
+  height: 31px;
+
+  &:focus {
+    border: 3px solie blue;
+  }
+}

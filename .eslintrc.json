@@ -9,6 +9,7 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "airbnb",
+    "airbnb-typescript",
     "plugin:prettier/recommended"
   ],
   "overrides": [],
@@ -16,13 +17,15 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": ["tsconfig.json"],
+    "project": ["./tsconfig.json"],
     "ecmaFeatures": {
       "jsx": true
     }
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
+    "import/no-unresolved": "off",
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "react/jsx-filename-extension": [1, {"extensions": [".tsx", ".ts"]}],
     "react/function-component-definition": [
       2,
