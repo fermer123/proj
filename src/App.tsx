@@ -4,17 +4,18 @@ import useInput from './components/input';
 import style from './App.module.scss';
 import useDebounce from './components/debounce';
 
+const url =
+  'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
+const token = '48f272b426d7267c92ceef852fed9aad1f8d4047';
+
 const App: FC = () => {
   const [address, setAddress] = useState<string>('');
   const [error, setError] = useState<Error>(null);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const input = useInput('');
-  const debounce = useDebounce(input.value, 400);
-  const url =
-    'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
-  const token = 'bddca6686babb3986a5cf9471da70efe66fbc942';
+  const debounce = useDebounce(input.value, 600);
 
-  const options = {
+  const options: RequestInit = {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -24,20 +25,19 @@ const App: FC = () => {
     },
     body: JSON.stringify({query: debounce, count: 1}),
   };
-
+  console.log(address);
   useEffect(() => {
     if (debounce.length > 3) {
       fetch(url, options)
-        .then((response) => console.log(response.text()))
-        // .then((result) => setAddress(JSON.parse(result)))
-        // .then((result) => console.log(result))
+        .then((response) => response.text())
+        .then((result) => setAddress(result))
         .then(() => setDropdown(true))
         .catch((e) => setError(e));
     } else {
       setDropdown(false);
     }
   }, [debounce]);
-  console.log(JSON.parse(address));
+
   return (
     <div className={style.app_container}>
       <div>
