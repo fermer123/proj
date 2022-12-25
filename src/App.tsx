@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, FocusEvent, useEffect, useState} from 'react';
 import useInput from './components/input';
 import style from './App.module.scss';
 import useDebounce from './components/debounce';
@@ -11,19 +11,31 @@ const token = '48f272b426d7267c92ceef852fed9aad1f8d4047';
 
 const App: FC = () => {
   const [address, setAddress] = useState<Idata>(null);
+  const [inputDirty, setInputDirty] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<Error | string>('');
   const [dropdown, setDropdown] = useState<boolean>(false);
   const input = useInput('');
   const debounce = useDebounce(input.value, 600);
 
-  const AddressHandler = (e: React.MouseEvent<HTMLElement>, data: IAdress) => {
-    e.stopPropagation();
+  const AddressHandler = (data: IAdress | null) => {
     input.setValue(
-      `${data.city_with_type} + ${
+      `${data.city_with_type ? data.city_with_type : ''}, ${
         data.street_with_type ? data.street_with_type : ''
-      }  ${data.house ? `${data.house_type} ${data.house}` : ''}`,
+      },  ${data.house ? `${data.house_type} ${data.house}` : ''}`,
     );
+  };
+  const blurHandler = (e: FocusEvent<HTMLInputElement>) => {
+    setDropdown(true);
+    if (
+      (e.currentTarget === e.target &&
+        address?.data.city_with_type !== '' &&
+        address?.data.street_with_type !== '' &&
+        address?.data.house !== '') ||
+      null
+    ) {
+      setInputDirty(true);
+    } else setInputDirty(false);
   };
   const options: RequestInit = {
     method: 'POST',
@@ -36,11 +48,11 @@ const App: FC = () => {
     body: JSON.stringify({query: debounce, count: 3}),
   };
   useEffect(() => {
-    if (debounce.length > 3) {
+    if (debounce.length >= 1) {
       fetch(url, options)
         .then((response) => response.json())
         .then((result) => setAddress(result.suggestions))
-        .then(() => setDropdown(true))
+        // .then(() => setDropdown(true))
         .catch((e) => setError(e));
     } else {
       setDropdown(false);
@@ -53,13 +65,23 @@ const App: FC = () => {
         <span>*</span>
       </div>
       <div className={style.app_container_input}>
-        <input value={input.value} onChange={input.onChange} />
+        <input
+          value={input.value}
+          onChange={input.onChange}
+          onBlur={(e) => blurHandler(e)}
+          type='text'
+          style={
+            inputDirty
+              ? {border: '3px solid rgba(17, 129, 160, 0.46)'}
+              : {border: '3px solid rgba(160, 17, 17, 0.46)'}
+          }
+        />
         {dropdown && (
           <ul>
-            {address.map(({data}: Idata, idx) => (
+            {address?.map(({data}: Idata, idx) => (
               // eslint-disable-next-line react/no-array-index-key, jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
               <li
-                onClick={(e) => AddressHandler(e, data)}
+                onClick={() => AddressHandler(data)}
                 // eslint-disable-next-line react/no-array-index-key
                 key={idx}>
                 <p>{data.city_with_type ? data.city_with_type : ''}</p>
