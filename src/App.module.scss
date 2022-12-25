@@ -19,14 +19,15 @@
       border-radius: 3px;
       position: relative;
       &:focus {
-        border: 3px solid blue;
+        border: 3px solid rgba(17, 129, 160, 0.46);
       }
     }
     ul {
       position: absolute;
+      border-radius: 3px;
       top: 35px;
       width: 300px;
-      height: 100px;
+      height: auto;
       background-color: white;
       overflow-y: scroll;
       li {
@@ -35,7 +36,7 @@
         padding: 2px 4px;
         font-size: 18px;
         &:hover {
-          background-color: rgba(255, 255, 255, 0.46);
+          background-color: rgba(17, 129, 160, 0.46);
         }
       }
     }

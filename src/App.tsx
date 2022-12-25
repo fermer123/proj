@@ -3,21 +3,12 @@ import React, {FC, useEffect, useState} from 'react';
 import useInput from './components/input';
 import style from './App.module.scss';
 import useDebounce from './components/debounce';
+import {IAdress, Idata} from './components/types';
 
 const url =
   'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
 const token = '48f272b426d7267c92ceef852fed9aad1f8d4047';
 
-interface IAdress {
-  city_with_type: string;
-  street_with_type: string;
-  house_type?: string;
-  house: number;
-}
-interface Idata {
-  map(arg: (e: Idata, idx: number) => JSX.Element): React.ReactNode;
-  data: IAdress;
-}
 const App: FC = () => {
   const [address, setAddress] = useState<Idata>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,6 +19,11 @@ const App: FC = () => {
 
   const AddressHandler = (e: React.MouseEvent<HTMLElement>, data: IAdress) => {
     e.stopPropagation();
+    input.setValue(
+      `${data.city_with_type} + ${
+        data.street_with_type ? data.street_with_type : ''
+      }  ${data.house ? `${data.house_type} ${data.house}` : ''}`,
+    );
   };
   const options: RequestInit = {
     method: 'POST',
@@ -57,7 +53,7 @@ const App: FC = () => {
         <span>*</span>
       </div>
       <div className={style.app_container_input}>
-        <input {...input} />
+        <input value={input.value} onChange={input.onChange} />
         {dropdown && (
           <ul>
             {address.map(({data}: Idata, idx) => (

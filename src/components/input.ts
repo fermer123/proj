@@ -10,6 +10,7 @@ const useInput = (initialValie = '') => {
   return {
     value,
     onChange: changeHandler,
+    setValue,
   };
 };
 export default useInput;
