@@ -10,25 +10,34 @@
   span {
     color: red;
   }
-  input {
-    width: auto;
-    height: 31px;
-    outline: none;
-    border-radius: 3px;
+  .app_container_input {
     position: relative;
-
-    &:focus {
-      border: 3px solid blue;
+    input {
+      width: 300px;
+      height: 31px;
+      outline: none;
+      border-radius: 3px;
+      position: relative;
+      &:focus {
+        border: 3px solid blue;
+      }
     }
-  }
-  ul {
-    position: absolute;
-    top: -42px;
-    width: 100%;
-    background-color: white;
-    overflow-y: scroll;
-    li {
-      padding: 2px 4px;
+    ul {
+      position: absolute;
+      top: 35px;
+      width: 300px;
+      height: 100px;
+      background-color: white;
+      overflow-y: scroll;
+      li {
+        display: flex;
+        gap: 4px;
+        padding: 2px 4px;
+        font-size: 18px;
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.46);
+        }
+      }
     }
   }
 }
