@@ -25,18 +25,25 @@ const App: FC = () => {
       },  ${data.house ? `${data.house_type} ${data.house}` : ''}`,
     );
   };
+  console.log(address);
+
   const blurHandler = (e: FocusEvent<HTMLInputElement>) => {
     setDropdown(true);
-    if (
-      (e.currentTarget === e.target &&
-        address?.data.city_with_type !== '' &&
-        address?.data.street_with_type !== '' &&
-        address?.data.house !== '') ||
-      null
-    ) {
-      setInputDirty(true);
-    } else setInputDirty(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    e.currentTarget === e.target
+      ? address?.map(({data}) => {
+          if (
+            address !== null &&
+            (data.city_with_type !== null || undefined) &&
+            (data.street_with_type !== null || undefined) &&
+            (data.house !== null || undefined)
+          ) {
+            setInputDirty(true);
+          } else setInputDirty(false);
+        })
+      : setDropdown(false);
   };
+
   const options: RequestInit = {
     method: 'POST',
     mode: 'cors',
