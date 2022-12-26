@@ -4,7 +4,7 @@ export interface IAdress {
   street: string;
   street_type: string;
   house_type?: string;
-  house: number | string;
+  house: string;
 }
 export interface Idata {
   map(arg: (e: Idata, idx?: number) => JSX.Element | void): React.ReactNode;

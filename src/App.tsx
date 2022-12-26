@@ -40,12 +40,10 @@ const App: FC = () => {
           `${data.city_type}.${data.city}` === inputChek[0] &&
           data.street !== null &&
           `${data.street_type}.${data.street}` === inputChek[1] &&
-          data.house !== null &&
-          `${data.house_type}.${data.house}` === inputChek[2]
+          data.house !== null
         ) {
           setInputDirty(false);
-          console.log('ура');
-          console.log(inputDirty);
+          setDropdown(false);
         } else {
           setInputDirty(true);
           setDropdown(true);
@@ -69,7 +67,7 @@ const App: FC = () => {
       fetch(url, options)
         .then((response) => response.json())
         .then((result) => setAddress(result.suggestions))
-        // .then(() => setDropdown(true))
+        .then(() => setDropdown(true))
         .catch((e) => setError(e));
     } else {
       setDropdown(false);
