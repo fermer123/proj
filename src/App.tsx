@@ -20,28 +20,38 @@ const App: FC = () => {
 
   const AddressHandler = (data: IAdress | null) => {
     input.setValue(
-      `${data.city_with_type ? data.city_with_type : ''}, ${
-        data.street_with_type ? data.street_with_type : ''
-      },  ${data.house ? `${data.house_type} ${data.house}` : ''}`,
+      `${data.city ? `${data.city_type}.${data.city}` : ''}, ${
+        data.street ? `${data.street_type}.${data.street}` : ''
+      }, ${data.house ? `${data.house_type}.${data.house}` : ''}`,
     );
   };
-  console.log(address);
 
   const blurHandler = (e: FocusEvent<HTMLInputElement>) => {
-    setDropdown(true);
+    const inputChek = input.value.replace(/[,]/g, '').split(' ');
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    e.currentTarget === e.target
-      ? address?.map(({data}) => {
-          if (
-            address !== null &&
-            (data.city_with_type !== null || undefined) &&
-            (data.street_with_type !== null || undefined) &&
-            (data.house !== null || undefined)
-          ) {
-            setInputDirty(true);
-          } else setInputDirty(false);
-        })
-      : setDropdown(false);
+    if (e.currentTarget === e.target) {
+      setDropdown(true);
+      // eslint-disable-next-line array-callback-return
+      address?.map(({data}) => {
+        if (
+          !!input.value.length &&
+          !!address &&
+          data.city !== null &&
+          `${data.city_type}.${data.city}` === inputChek[0] &&
+          data.street !== null &&
+          `${data.street_type}.${data.street}` === inputChek[1] &&
+          data.house !== null &&
+          `${data.house_type}.${data.house}` === inputChek[2]
+        ) {
+          setInputDirty(false);
+          console.log('ура');
+          console.log(inputDirty);
+        } else {
+          setInputDirty(true);
+          setDropdown(true);
+        }
+      });
+    } else setDropdown(false);
   };
 
   const options: RequestInit = {
@@ -79,8 +89,8 @@ const App: FC = () => {
           type='text'
           style={
             inputDirty
-              ? {border: '3px solid rgba(17, 129, 160, 0.46)'}
-              : {border: '3px solid rgba(160, 17, 17, 0.46)'}
+              ? {border: '3px solid rgba(160, 17, 17, 0.46)'}
+              : {border: '3px solid rgba(17, 129, 160, 0.46)'}
           }
         />
         {dropdown && (
@@ -91,9 +101,9 @@ const App: FC = () => {
                 onClick={() => AddressHandler(data)}
                 // eslint-disable-next-line react/no-array-index-key
                 key={idx}>
-                <p>{data.city_with_type ? data.city_with_type : ''}</p>
-                <p>{data.street_with_type ? data.street_with_type : ''}</p>
-                <p>{data.house ? `${data.house_type} ${data.house}` : ''}</p>
+                <p>{data.city ? `${data.city_type}.${data.city}` : ''}</p>
+                <p>{data.street ? `${data.street_type}.${data.street}` : ''}</p>
+                <p>{data.house ? `${data.house_type}.${data.house}` : ''}</p>
               </li>
             ))}
           </ul>
