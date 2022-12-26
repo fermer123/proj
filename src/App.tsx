@@ -3,11 +3,8 @@ import React, {FC, FocusEvent, useEffect, useState} from 'react';
 import useInput from './components/input';
 import style from './App.module.scss';
 import useDebounce from './components/debounce';
-import {IAdress, Idata} from './components/types';
-
-const url =
-  'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
-const token = '48f272b426d7267c92ceef852fed9aad1f8d4047';
+import {IAdress, Idata, url} from './components/types';
+import useOption from './components/fetch';
 
 const App: FC = () => {
   const [address, setAddress] = useState<Idata>(null);
@@ -17,7 +14,7 @@ const App: FC = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const input = useInput('');
   const debounce = useDebounce(input.value, 600);
-
+  const getOption = useOption({debounce});
   const AddressHandler = (data: IAdress | null) => {
     input.setValue(
       `${data.city ? `${data.city_type}.${data.city}` : ''}, ${
@@ -30,7 +27,6 @@ const App: FC = () => {
     const inputChek = input.value.replace(/[,]/g, '').split(' ');
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     if (e.currentTarget === e.target) {
-      setDropdown(true);
       // eslint-disable-next-line array-callback-return
       address?.map(({data}) => {
         if (
@@ -40,10 +36,10 @@ const App: FC = () => {
           `${data.city_type}.${data.city}` === inputChek[0] &&
           data.street !== null &&
           `${data.street_type}.${data.street}` === inputChek[1] &&
-          data.house !== null
+          data.house !== null &&
+          inputChek[2] !== ''
         ) {
           setInputDirty(false);
-          setDropdown(false);
         } else {
           setInputDirty(true);
           setDropdown(true);
@@ -52,19 +48,9 @@ const App: FC = () => {
     } else setDropdown(false);
   };
 
-  const options: RequestInit = {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Token ${token}`,
-    },
-    body: JSON.stringify({query: debounce, count: 3}),
-  };
   useEffect(() => {
     if (debounce.length >= 1) {
-      fetch(url, options)
+      fetch(url, getOption)
         .then((response) => response.json())
         .then((result) => setAddress(result.suggestions))
         .then(() => setDropdown(true))
@@ -73,6 +59,15 @@ const App: FC = () => {
       setDropdown(false);
     }
   }, [debounce]);
+  const postData = (e: React.KeyboardEvent<HTMLInputElement>, data) => {
+    if (e.key === 'Enter' && !inputDirty) {
+      // имитация запроса | fetch('url' useOption(param))
+      const promise: Promise<void> = Promise.resolve(data);
+      promise.then((value) => {
+        console.log(value);
+      });
+    }
+  };
   return (
     <div className={style.app_container}>
       <div>
@@ -90,6 +85,8 @@ const App: FC = () => {
               ? {border: '3px solid rgba(160, 17, 17, 0.46)'}
               : {border: '3px solid rgba(17, 129, 160, 0.46)'}
           }
+          onKeyDown={(e) => postData(e, input.value)}
+          tabIndex={0}
         />
         {dropdown && (
           <ul>
