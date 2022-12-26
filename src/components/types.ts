@@ -13,4 +13,5 @@ export interface Idata {
 export type IuseOption = {
   debounce: string;
 };
-export const url: string = process.env.REACT_APP_BASE_URLREACT_APP_BASE_URL;
+export const url =
+  'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
