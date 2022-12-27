@@ -95,10 +95,11 @@ const App: FC = () => {
           tabIndex={0}
         />
         {dropdown && (
-          <ul>
+          <ul className={style.app_container_ul_dropdown}>
             {address?.map(({data}: Idata, idx) => (
               // eslint-disable-next-line react/no-array-index-key, jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
               <li
+                className={style.app_container_li_dropdown}
                 onClick={() => AddressHandler(data)}
                 // eslint-disable-next-line react/no-array-index-key
                 key={idx}>

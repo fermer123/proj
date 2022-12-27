@@ -20,7 +20,7 @@
       position: relative;
       padding: 0 10px;
     }
-    ul {
+    .app_container_ul_dropdown {
       position: absolute;
       border-radius: 3px;
       top: 35px;
@@ -28,7 +28,7 @@
       height: auto;
       background-color: white;
       overflow-y: scroll;
-      li {
+      app_container_li_dropdown {
         display: flex;
         gap: 4px;
         padding: 2px 4px;
