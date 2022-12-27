@@ -1,6 +1,6 @@
 export interface IAdress {
   city: string;
-  city_type?: 'ул';
+  city_type?: string;
   street: string;
   street_type: string;
   house_type?: string;
