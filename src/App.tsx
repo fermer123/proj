@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, {FC, FocusEvent, useEffect, useState} from 'react';
+import React, {FC, FocusEvent, useCallback, useEffect, useState} from 'react';
 import useInput from './components/input';
 import style from './App.module.scss';
 import useDebounce from './components/debounce';
@@ -12,6 +12,12 @@ const App: FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<Error | string>('');
   const [dropdown, setDropdown] = useState<boolean>(false);
+  const dropdownUl = useCallback(
+    (arg: boolean) => {
+      setDropdown(arg);
+    },
+    [dropdown],
+  );
   const input = useInput('');
   const debounce = useDebounce(input.value, 600);
   const getOption = useOption({debounce});
@@ -42,10 +48,10 @@ const App: FC = () => {
           setInputDirty(false);
         } else {
           setInputDirty(true);
-          setDropdown(true);
+          dropdownUl(true);
         }
       });
-    } else setDropdown(false);
+    } else dropdownUl(false);
   };
 
   useEffect(() => {
@@ -53,10 +59,10 @@ const App: FC = () => {
       fetch(url, getOption)
         .then((response) => response.json())
         .then((result) => setAddress(result.suggestions))
-        .then(() => setDropdown(true))
+        .then(() => dropdownUl(true))
         .catch((e) => setError(e));
     } else {
-      setDropdown(false);
+      dropdownUl(false);
     }
   }, [debounce]);
   const postData = (e: React.KeyboardEvent<HTMLInputElement>, data) => {
@@ -78,7 +84,7 @@ const App: FC = () => {
         <input
           value={input.value}
           onChange={input.onChange}
-          onBlur={(e) => blurHandler(e)}
+          onBlur={blurHandler}
           type='text'
           style={
             inputDirty
